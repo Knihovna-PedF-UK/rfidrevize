@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html>
+<style type="text/css">
+body {
+  margin: 20px auto;
+  text-align: center;
+}
+#scanButton {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+</style>
 <body>
   <button id="scanButton">Skenovat knihu</button>
-  <p id="output">Čekám na přiložení knihy, nová verze...</p>
+  <p id="output">Tady bude output</p>
 
   <script>
     document.getElementById('scanButton').addEventListener('click', async () => {
@@ -10,6 +20,7 @@
         try {
           const reader = new NDEFReader();
           await reader.scan();
+          document.getElementById('output').innerText = "Čekám na přiložení knihy"
           reader.onreading = event => {
             // Získáme raw data z tagu
             const data = new Uint8Array(event.message.records[0].data.buffer);
