@@ -2,7 +2,7 @@
 <html>
 <body>
   <button id="scanButton">Skenovat knihu</button>
-  <p id="output">Čekám na přiložení knihy...</p>
+  <p id="output">Čekám na přiložení knihy, nová verze...</p>
 
   <script>
     document.getElementById('scanButton').addEventListener('click', async () => {
@@ -11,11 +11,17 @@
           const reader = new NDEFReader();
           await reader.scan();
           reader.onreading = event => {
-            const decoder = new TextDecoder();
-            for (const record of event.message.records) {
-              document.getElementById('output').innerText = 
-                "Načteno: " + decoder.decode(record.data);
-            }
+            // Získáme raw data z tagu
+            const data = new Uint8Array(event.message.records[0].data.buffer);
+  
+            // Převedeme bajty na řetězec
+            // Pokud víme, že tam jsou jen čísla v ASCII, stačí:
+            const idKnihy = Array.from(data)
+              .map(b => String.fromCharCode(b))
+              .join('');
+    
+            console.log("ID knihy je:", idKnihy);
+            document.getElementById('output').innerText = "Načteno ID: " + idKnihy;
           };
         } catch (error) {
           document.getElementById('output').innerText = "Chyba: " + error;
