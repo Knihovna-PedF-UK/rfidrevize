@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <button id="scanButton">Skenovat knihu</button>
+  <p id="output">Čekám na přiložení knihy...</p>
+
+  <script>
+    document.getElementById('scanButton').addEventListener('click', async () => {
+      if ('NDEFReader' in window) {
+        try {
+          const reader = new NDEFReader();
+          await reader.scan();
+          reader.onreading = event => {
+            const decoder = new TextDecoder();
+            for (const record of event.message.records) {
+              document.getElementById('output').innerText = 
+                "Načteno: " + decoder.decode(record.data);
+            }
+          };
+        } catch (error) {
+          document.getElementById('output').innerText = "Chyba: " + error;
+        }
+      } else {
+        document.getElementById('output').innerText = "Web NFC není v tomto prohlížeči podporováno.";
+      }
+    });
+  </script>
+</body>
+</html>
