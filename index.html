@@ -34,6 +34,10 @@ body {
             console.log("ID knihy je:", idKnihy);
             document.getElementById('output').innerText = "Načteno ID: " + idKnihy;
           };
+          reader.onerror = event => {
+            console.log("NFC chyba:", event.message);
+            document.getElementById('output').innerText = "Chyba NFC: " + event.message;
+          };
         } catch (error) {
           document.getElementById('output').innerText = "Chyba: " + error;
         }
